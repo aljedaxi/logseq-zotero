@@ -1,0 +1,10 @@
+{
+  "name": "logseq-zotero",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "node-fetch": "^2.6.1",
+    "sanctuary": "^3.1.0"
+  }
+}
