@@ -4,12 +4,30 @@
 
 first, clone your logseq repo. 
 
-```
+### on unix systems:
+
+install node somehow. [this](https://formulae.brew.sh/formula/node#default) is nice on mac os. 
+
+```sh
 API_KEY=this is my api key, that i made by going to https://www.zotero.org/settings/keys
 USER_ID=this is my user id, that's listed at https://www.zotero.org/settings/keys
 BIB_FILE_TITLE=title for the file that links to all created files; optional
 export API_KEY USER_ID; node ./index.js ${pathToMyLogseqInstance}/pages
 ```
+
+on windows:
+
+install node somehow. i recommend [this](https://chocolatey.org/packages/nodejs.install)
+
+```bat
+SET API_KEY=this is my api key, that i made by going to https://www.zotero.org/settings/keys
+SET USER_ID=this is my user id, that's listed at https://www.zotero.org/settings/keys
+SET BIB_FILE_TITLE=title for the file that links to all created files; optional
+call node ./index.js ${pathToMyLogseqInstance}/pages
+# haven't tested this yet!
+```
+
+## what it does
 
 this will access your zotero library and create a file called `z_${titleOfWorkLowerSnakeCase}.md`, with the title of the work as the title. each file has the title of the work as the title, so you can reference it in logseq as [[title of the work]].  a link to every added file is put into `${BIB_FILE_TITLE.toLowerCase().replace(/\s+/, '_')}`, a little bibliography of sorts.
 
