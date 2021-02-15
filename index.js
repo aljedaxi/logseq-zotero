@@ -18,6 +18,14 @@ const maybe = ifBad => ifGood => m =>
 
 const writeFilePromised = filePath => fileData =>
 	new Promise((res, rej) => {
+		fs.writeFile(filePath, fileData, (err) => {
+			if (err) res (Left (err.message));
+			res (Right (`wrote file ${filePath}`));
+		});
+	});
+
+const writeFileIfDoesntExist = filePath => fileData =>
+	new Promise((res, rej) => {
 		fs.stat(filePath, (err, stat) => {
 			// ENOENT means the file exists
 			if (err?.code !== 'ENOENT') {
@@ -75,7 +83,7 @@ const writeFiles = ({outDir, bibFileTitle}) => fileStuffs => {
 				Promise.resolve (Left ('someone didn\'t have a title'))
 			) (
 				({title, fileName}) => 
-					writeFilePromised(`${outDir}/${fileName}.md`)(emptyFileWithTitle(title))
+					writeFileIfDoesntExist(`${outDir}/${fileName}.md`)(emptyFileWithTitle(title))
 			)
 		),
 		writeFilePromised (`${outDir}/${bibFileTitle.replace(/\s+/g, '_').toLowerCase()}.md`) (bibData)
