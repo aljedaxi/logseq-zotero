@@ -7,6 +7,7 @@ first, clone your logseq repo.
 ```
 API_KEY=this is my api key, that i made by going to https://www.zotero.org/settings/keys
 USER_ID=this is my user id, that's listed at https://www.zotero.org/settings/keys
+BIB_FILE_TITLE=title for the file that links to all created files; optional
 export API_KEY USER_ID; node ./index.js ${pathToMyLogseqInstance}/pages
 ```
 
