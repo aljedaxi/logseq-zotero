@@ -1,12 +1,16 @@
 const {
-	justs,
+	rights,
 	prop, 
+	chain,
 	map,
 	splitOn,
 	head,
 	fromMaybe,
 	pipe,
-	isNothing,
+	maybeToEither,
+	isLeft,
+	Nothing,
+	Just,
 	Left,
 	Right,
 } = require ('sanctuary');
@@ -14,7 +18,7 @@ const fetch = require('node-fetch');
 const fs = require('fs');
 
 const maybe = ifBad => ifGood => m => 
-	isNothing (m) ? ifBad : ifGood (m.value);
+	isLeft (m) ? ifBad : ifGood (m.value);
 
 const writeFilePromised = filePath => fileData =>
 	new Promise((res, rej) => {
@@ -64,18 +68,28 @@ ${map (link => `\
  * this takes the data property of https://gist.github.com/dstillman/f1030b9609aadc51ddec as its input
  * @returns {Object} Maybe an object with keys title and fileName
  */
-const makeName = pipe([
+const getTitle = pipe([
 	prop ('title'),
 	splitOn (':'),
-	head,
+	item => maybeToEither (`${item} didn't have a title`) (head (item))
+]);
+
+const parrergonTypes = ['attachment'];
+const isParrergon = ({itemType}) => parrergonTypes.includes(itemType);
+const makeName = pipe([
+	item => isParrergon (item) ? Left ('was a parrergon') : Right (item),
+	chain (getTitle),
+	map (title => 
+		title.replace(/(‘)|(’)/g, '\''),
+	),
 	map (title => ({
-		title, 
+		title,
 		fileName: `z_${title.replace(/\s+/g, '_').toLowerCase()}`
 	})),
 ]);
 
 const writeFiles = ({outDir, bibFileTitle}) => fileStuffs => {
-	const titles = map (prop ('title')) (justs (fileStuffs));
+	const titles = map (prop ('title')) (rights (fileStuffs));
 	const bibData = fileTitleThing (bibFileTitle) (titles);
 	return Promise.all([
 		...fileStuffs.map(
